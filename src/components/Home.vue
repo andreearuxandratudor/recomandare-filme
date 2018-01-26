@@ -1,44 +1,55 @@
 <template>
   <div>
     <div id="startpage" v-if="startPage">
-      <button type="button" class="btn btn-primary" @click = "startPage = false; showType = true;">GET STARTED</button>
+      <button type="button" id="get-started" @click = "startPage = false; showType = true;"><span>GET STARTED</span></button>
     </div>
     
     <div id="type" v-if="showType">
-      <h1>Type:</h1>
-        <div class="checkbox" v-for="type in movieTypes">
-          <input type="checkbox" :id="type.id" :value="type.id" v-model="searchParams.checkedMovieTypes">
-          <label :for="type.id">{{type.name}}</label>
-        </div>
-      <button type="button" class="btn btn-primary" @click = "showType = false; showYear = true;">Next</button>
+      <div id="movie-types-container">
+        <h2>Types:</h2>
+          <div class="checkbox" v-for="type in movieTypes">
+            <input type="checkbox" :id="type.id" :value="type.id" v-model="searchParams.checkedMovieTypes">
+            <label :for="type.id">{{type.name}}</label>
+          </div>
+          <i class="fa fa-long-arrow-right fa-2x" aria-hidden="true" @click ="showType = false; showYear = true;"></i>
+      </div>
     </div>
 
     <div id="year" v-if="showYear">
-      <h1>Year:</h1>
+      <div id="years-container">
+      <h1 class="text-center">Year:</h1>
+      <div>
       <span>From</span>
       <select v-model="searchParams.startDate">
-        <option value=0>Any</option>
+        <option value=0 selected>Any</option>
         <option v-for="year in years">{{year}}</option>
       </select>
       <span>To</span>
       <select v-model="searchParams.endDate">
-        <option value=0>Any</option>
+        <option value=0 selected>Any</option>
         <option v-for="year in years">{{year}}</option>
       </select>
-      <button type="button" class="btn btn-primary" @click = "showYear = false; showType = true;">Back</button>
-      <button type="button" class="btn btn-primary" @click = "formatYears(); showYear = false; showActors = true;">Next</button>
+      </div>
+      <div class="actions">
+        <i class="fa fa-long-arrow-left fa-2x" aria-hidden="true" @click ="showYear = false; showType = true;"></i> &nbsp;
+        <i class="fa fa-long-arrow-right fa-2x" aria-hidden="true" @click ="formatYears(); showYear = false; showActors = true;"></i>
+      </div>
+      </div>
     </div>
 
     <div id="actors" v-if="showActors">
-      <h1>Actors:</h1>
-      <input v-model="actorName">
-      <button type="button" class="btn btn-primary" @click = "addActor(actorName)">plus</button>
-      Added actors:
-      <ul v-for="actor in actors">
-        <li>{{actor}}</li>
-      </ul>
-      <button type="button" class="btn btn-primary" @click = "showActors = false; showYear = true;">Back</button>
-      <router-link :to="{ path: 'results', query: searchParams}">Go</router-link>
+      <div id="actors-container">
+        <h1>Actors:</h1>
+        <input v-model="actorName" v-on:keyup.13 = "addActor(actorName)">
+        <i class="fa fa-plus" aria-hidden="true" @click = "addActor(actorName)"></i>
+        <ul>
+          <li v-for="actor in actors">{{actor}}</li>
+        </ul>
+        <div class="actions">
+          <i class="fa fa-long-arrow-left fa-2x" aria-hidden="true" @click ="showActors = false; showYear = true;"></i> &nbsp;
+          <router-link id="go" :to="{ path: 'results', query: searchParams}" > <i class="fa fa-plane" aria-hidden="true"></i> Let's go! </router-link>
+        </div>
+      </div>
     </div>
 
   </div>
@@ -78,7 +89,8 @@ export default {
       });
     },
     generateYears() {
-      for (let i = 1900; i < 2021; i += 5) {
+      this.years.push(2018);
+      for (let i = 2015; i >= 1900; i -= 5) {
         this.years.push(i);
       }
     },
@@ -123,10 +135,115 @@ export default {
 </script>
 
 <style>
-
-body{
-  background: url("../assets/background1.jpeg") no-repeat center center fixed;
+#startpage,
+#type,
+#year,
+#actors {
+  background: url("../assets/background1.jpg") no-repeat center center fixed;
   background-size: cover;
+  height: -webkit-fill-available;
 }
+
+#get-started {
+  position: relative;
+  top: 43%;
+  padding: 0;
+  border-radius: 8px;
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  font-size: 40px;
+}
+
+#get-started span {
+  display: inline-block;
+  padding: 20px 30px;
+  color: #fff;
+  background-color: #d60000;
+  background-image: -webkit-linear-gradient(
+    hsla(0, 87%, 30%, 0.5),
+    hsla(360, 100%, 32%, 0.8)
+  );
+  border-radius: 8px;
+  transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
+}
+#get-started:hover span {
+  background-color: #a43c40;
+  text-shadow: 0 -1px 1px rgba(255, 240, 242, 1),
+    0 0 5px rgba(255, 255, 245, 0.8);
+}
+
+#type {
+  display: flex;
+  align-items: center;
+  padding-left: 42%;
+}
+
+#year {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#actors {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+#movie-types-container {
+  text-align: left;
+  padding: 5px 20px 5px 30px;
+  background-image: -webkit-linear-gradient(
+    hsla(204, 79%, 38%, 0.8),
+    hsla(211, 59%, 19%, 0.8)
+  );
+  box-shadow: inset 0 10px 15px rgba(0, 0, 0, 0.125);
+  border-radius: 10px;
+  color: #fff;
+}
+
+#years-container, #actors-container {
+  text-align: left;
+  padding: 20px;
+  background-image: -webkit-linear-gradient(
+    hsla(204, 79%, 38%, 0.8),
+    hsla(211, 59%, 19%, 0.8)
+  );
+  box-shadow: inset 0 10px 15px rgba(0, 0, 0, 0.125);
+  border-radius: 10px;
+  color: #fff;
+  margin-top: 18%;
+}
+
+#year select, #actors input {
+  color: black;
+}
+
+#actors ul {
+  list-style-type: none;
+  text-align: left;
+  padding: 10px;
+}
+.fa-long-arrow-right {
+  float: right;
+  cursor: pointer;
+}
+.fa-long-arrow-left {
+  float: left;
+  cursor: pointer;
+}
+
+select option {
+    height: 100px !important;
+}
+
+.actions #go {
+  float: right;
+  cursor: pointer;
+  color: #fff;
+  padding-top: 5px;
+}
+.actions #go:hover {
+  text-decoration: none;
+}
+
 
 </style>
