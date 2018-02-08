@@ -1,10 +1,10 @@
 <template>
   <div>
-    <div id="startpage" v-if="startPage">
+    <div id="startpage" v-show="startPage">
       <button type="button" id="get-started" @click = "startPage = false; showType = true;"><span>GET STARTED</span></button>
     </div>
     
-    <div id="type" v-if="showType">
+    <div id="type" v-show="showType">
       <div id="movie-types-container">
         <h2>Types:</h2>
           <div class="checkbox" v-for="type in movieTypes">
@@ -15,18 +15,16 @@
       </div>
     </div>
 
-    <div id="year" v-if="showYear">
+    <div id="year" v-show="showYear">
       <div id="years-container">
       <h1 class="text-center">Year:</h1>
       <div>
       <span>From</span>
-      <select v-model="searchParams.startDate">
-        <option value=0 selected>Any</option>
-        <option v-for="year in years">{{year}}</option>
+      <select v-model="startDate" v-on:change ="selectOnChange" id="startDateSelect">
+        <option v-for="year in years" v-bind:value="year">{{year}}</option>
       </select>
       <span>To</span>
-      <select v-model="searchParams.endDate">
-        <option value=0 selected>Any</option>
+      <select v-model="endDate" id="endDateSelect">
         <option v-for="year in years">{{year}}</option>
       </select>
       </div>
@@ -37,7 +35,7 @@
       </div>
     </div>
 
-    <div id="actors" v-if="showActors">
+    <div id="actors" v-show="showActors">
       <div id="actors-container">
         <h1>Actors:</h1>
         <input v-model="actorName" v-on:keyup.13 = "addActor(actorName)">
@@ -66,6 +64,8 @@ export default {
       years: [],
       actorName: "",
       actors: [],
+      startDate: 1900,
+      endDate: 2018,
       searchParams: {
         checkedMovieTypes: [],
         startDate: 0,
@@ -95,14 +95,14 @@ export default {
       }
     },
     formatYears() {
-      this.searchParams.startDate =
-        this.searchParams.startDate !== 0
-          ? this.searchParams.startDate + "-01-01"
-          : "1900-01-01";
-      this.searchParams.endDate =
-        this.searchParams.endDate !== 0
-          ? this.searchParams.endDate + "-01-01"
-          : this.getCurrentDate();
+        this.searchParams.startDate =
+          this.startDate !== 0 && this.startDate.toString().length === 4
+            ? this.startDate + "-01-01"
+            : "1900-01-01";
+        this.searchParams.endDate =
+          this.endDate !== 0 && this.endDate.toString().length === 4
+            ? this.endDate + "-12-31"
+            : this.getCurrentDate();
     },
     getCurrentDate() {
       var dateObj = new Date();
@@ -111,6 +111,13 @@ export default {
       var year = dateObj.getUTCFullYear();
       dateObj = year + "-" + month + "-" + day;
       return dateObj;
+    },
+    selectOnChange(){
+      console.log("changed");
+      var endDateSelectOptions = document.getElementById("endDateSelect").getElementsByTagName("option");
+      for( var i=0; i<endDateSelectOptions.length; i++){
+        endDateSelectOptions[i].value<this.startDate? endDateSelectOptions[i].disabled=true : endDateSelectOptions[i].disabled=false;
+      }
     },
     addActor(actorName) {
       let actor = {};
@@ -244,6 +251,8 @@ select option {
 .actions #go:hover {
   text-decoration: none;
 }
-
+ #actors .fa-plus{
+   cursor:pointer;
+ }
 
 </style>

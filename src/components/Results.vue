@@ -105,7 +105,7 @@ body {
 .text {
   overflow: hidden;
   display: -webkit-box;
-  -webkit-line-clamp: 6;
+  -webkit-line-clamp: 7;
   -webkit-box-orient: vertical;
   padding-top: 15px;
   line-height: 160%;
@@ -146,7 +146,7 @@ h2 {
   padding: 20px;
 }
 #no-results i {
-  margin-top: 18%;
+  margin-top: 5%;
   color: #fff;
 }
 

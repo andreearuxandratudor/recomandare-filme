@@ -30,7 +30,7 @@ export default {
         language: 'en-US',
         sort_by: 'vote_average.desc',
         with_original_language: 'en',
-        'vote_count.gte': 100,
+        'vote_count.gte': 1000,
         'primary_release_date.gte': searchParams.release_date.gte,
         'primary_release_date.lte': searchParams.release_date.lte,
         with_people: searchParams.with_people && searchParams.with_people.length > 0 ? searchParams.with_people.toString() : '',
