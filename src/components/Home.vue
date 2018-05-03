@@ -1,7 +1,7 @@
 <template>
   <div>
     <div id="startpage" v-show="startPage">
-      <button type="button" id="get-started" @click = "startPage = false; showType = true;"><span>GET STARTED</span></button>
+      <button type="button" id="get-started" @click = "startPage = false; showType = true;"><span>GET STARTED!</span></button>
     </div>
     
     <div id="type" v-show="showType">
